@@ -60,5 +60,28 @@ trashwheel_data <-
 ```
 
 Here is the **code chunk** to read and clean the data for mr trash wheel 
+```{r}
+precipitation_2016_data<-
+  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx",sheet = "2016 Precipitation", range = "A2:B15") %>% 
+  janitor::clean_names() %>%
+  mutate(
+    year = 2016
+  )
+
+precipitation_2017_data<-
+  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx",sheet = "2017 Precipitation", range = "A2:B15") %>% 
+  janitor::clean_names() %>%
+  mutate(
+    year = 2017
+  )
+
+combine_precipitation_data =
+  left_join(precipitation_2016_data,precipitation_2017_data,by = "month") 
+
+combine_precipitation_data$month = month.name[combine_precipitation_data$month]
+```
+
+
+
 
 
