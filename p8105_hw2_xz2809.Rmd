@@ -1,0 +1,68 @@
+---
+title: "P8105_hw2_xz2809"
+author: "Coco Zou"
+date: "9/29/2018"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+## Problem 1
+
+Here is the **code chunk** to read the data
+```{r}
+NYCtransit_data <-  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
+```
+
+Now we are trying to clean the data: retain line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance. 
+```{r}
+NYCtransit_data = janitor::clean_names(NYCtransit_data)
+NYCtransit_data_retain = 
+  select(NYCtransit_data,line:vending, ada, ada_notes) %>% 
+  mutate(entry=recode(entry,'YES'=TRUE, 'NO'=FALSE)) 
+```
+
+This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I import the data and then clean the names into all lower cases. Then I select the only variable required, at last I converted the "entry" variable into logical variable "TRUE" and "FALSE". 
+
+```{r}
+num_stations = 
+  distinct(NYCtransit_data_retain, line, station_name) %>% 
+  dim()
+
+num_stations_ada = 
+  filter(NYCtransit_data_retain, ada=='TRUE') %>% 
+  distinct(line,station_name) %>% 
+  dim()
+
+a = filter(NYCtransit_data_retain,entry == 'TRUE')
+length_1 = length(a$entry)
+b = filter(NYCtransit_data_retain,entry == 'TRUE', vending=='YES')
+length_2= length(b$entry)
+proportion=length_2/length_1
+```
+
+Now we are trying to reformat the dataset 
+
+
+Here is the **code chunk** to read and clean the data
+```{r}
+trashwheel_data <-  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx")
+trashwheel_data = 
+  janitor::clean_names(trashwheel_data) 
+```
+
+##Problem 3
+```{r}
+
+```
+
+
+
+
+
+
+
+
