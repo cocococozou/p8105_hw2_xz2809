@@ -47,22 +47,18 @@ proportion=length_2/length_1
 Now we are trying to reformat the dataset 
 
 
-Here is the **code chunk** to read and clean the data
+Here is the **code chunk** to read and clean the data for mr trash wheel 
 ```{r}
-trashwheel_data <-  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx")
-trashwheel_data = 
-  janitor::clean_names(trashwheel_data) 
+trashwheel_data <-  
+  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx",range = cell_cols("A:N"), ) %>% 
+  janitor::clean_names() %>% 
+  head(256) %>% 
+  mutate(
+    sports_balls = round(sports_balls),
+    sports_balls = as.integer(sports_balls)
+  )
 ```
 
-##Problem 3
-```{r}
-
-```
-
-
-
-
-
-
+Here is the **code chunk** to read and clean the data for mr trash wheel 
 
 
