@@ -109,13 +109,44 @@ brfss_smart2010=
   select(-question) %>% 
   select(-sample_size) %>%
   select(-(confidence_limit_low:geo_location))
-  
-
 ```
-Now we are trying to read and clean the data:
+
+Now we create a new variable showing the proportion of responses that were “Excellent” or “Very Good”:
 ```{r}
+brfss_smart2010 %>% 
+  filter(response=='Excellent' | response=='Very good') %>% 
+  dim()
 
+dim(brfss_smart2010)
 ```
+
+```{r}
+brfss_smart2010 %>% 
+  distinct(locationabbr) %>% 
+  dim()
+```
+The proportion of responses that were “Excellent” or “Very Good" is `r 4260/134203`.
+In America, there are 50 states and every state has been represented. The one more variable is "DC", which is not an acutual state but the capital of USA.
+
+```{r}
+MaxTable <- function(x){
+     m <- unique(x)
+     m[which.max(tabulate(match(x,m)))]
+}
+MaxTable(brfss_smart2010$locationabbr)
+```
+
+
+```{r}
+brfss_smart2010$data_value=as.numeric(brfss_smart2010$data_value)
+brfss_excellent_2002 = 
+  filter(brfss_smart2010,response=='Excellent') %>% 
+  filter(year==2002)
+summary(brfss_excellent_2002$data_value)
+ggplot(brfss_excellent_2002,aes(x=data_value))+geom_histogram()
+```
+
+The most most observed state is NJ. The median of the “Excellent” response value is 23.60. 
 
 
 
