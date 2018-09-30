@@ -178,6 +178,18 @@ b = filter(NYCtransit_data_retain,entry == 'TRUE', vending=='YES')
 length_2= length(b$entry)
 proportion=length_2/length_1</code></pre>
 <p>Now we are trying to reformat the dataset</p>
+<pre class="r"><code>NYCtransit_data_retain %&gt;% 
+  gather(key = route_number, value = route_name, route1:route11) %&gt;% 
+  filter(route_name=='A') %&gt;% 
+  distinct(station_name) %&gt;% 
+  dim()</code></pre>
+<pre><code>## [1] 56  1</code></pre>
+<pre class="r"><code>NYCtransit_data_retain %&gt;% 
+  gather(key = route_number, value = route_name, route1:route11) %&gt;% 
+  filter(route_name=='A',ada==TRUE) %&gt;% 
+  distinct(station_name) %&gt;% 
+  dim()</code></pre>
+<pre><code>## [1] 16  1</code></pre>
 <p>Here is the <strong>code chunk</strong> to read and clean the data for mr trash wheel</p>
 <pre class="r"><code>trashwheel_data &lt;-  
   read_excel( &quot;data/HealthyHarborWaterWheelTotals2017-9-26.xlsx&quot;,range = cell_cols(&quot;A:N&quot;), ) %&gt;% 

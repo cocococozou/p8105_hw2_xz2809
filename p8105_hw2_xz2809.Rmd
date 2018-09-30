@@ -46,6 +46,21 @@ proportion=length_2/length_1
 
 Now we are trying to reformat the dataset 
 
+```{r}
+NYCtransit_data_retain %>% 
+  gather(key = route_number, value = route_name, route1:route11) %>% 
+  filter(route_name=='A') %>% 
+  distinct(station_name) %>% 
+  dim()
+
+NYCtransit_data_retain %>% 
+  gather(key = route_number, value = route_name, route1:route11) %>% 
+  filter(route_name=='A',ada==TRUE) %>% 
+  distinct(station_name) %>% 
+  dim()
+```
+
+
 
 Here is the **code chunk** to read and clean the data for mr trash wheel 
 ```{r}
