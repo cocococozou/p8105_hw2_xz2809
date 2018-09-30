@@ -162,7 +162,7 @@ $(document).ready(function () {
 NYCtransit_data_retain = 
   select(NYCtransit_data,line:vending, ada, ada_notes) %&gt;% 
   mutate(entry=recode(entry,'YES'=TRUE, 'NO'=FALSE)) </code></pre>
-<p>This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I import the data and then clean the names into all lower cases. Then I select the only variable required, at last I converted the “entry” variable into logical variable “TRUE” and “FALSE”.</p>
+<p>This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I import the data and then clean the names into all lower cases. Then I select the only variable required, at last I converted the “entry” variable into logical variable “TRUE” and “FALSE”. The diminsion of the given data is 1868, 21. This is not a tidy dataset yet, because the “route1” to “route11” are apparently data, but they appreared as variables at the first row. Therefore, we need do some reformatting later.</p>
 <pre class="r"><code>num_stations = 
   distinct(NYCtransit_data_retain, line, station_name) %&gt;% 
   dim()
@@ -190,6 +190,9 @@ proportion=length_2/length_1</code></pre>
   distinct(station_name) %&gt;% 
   dim()</code></pre>
 <pre><code>## [1] 16  1</code></pre>
+</div>
+<div id="problem-2" class="section level2">
+<h2>Problem 2</h2>
 <p>Here is the <strong>code chunk</strong> to read and clean the data for mr trash wheel</p>
 <pre class="r"><code>trashwheel_data &lt;-  
   read_excel( &quot;data/HealthyHarborWaterWheelTotals2017-9-26.xlsx&quot;,range = cell_cols(&quot;A:N&quot;), ) %&gt;% 
@@ -218,6 +221,20 @@ combine_precipitation_data =
   left_join(precipitation_2016_data,precipitation_2017_data,by = &quot;month&quot;) 
 
 combine_precipitation_data$month = month.name[combine_precipitation_data$month]</code></pre>
+</div>
+<div id="problem-3" class="section level2">
+<h2>Problem 3</h2>
+<p>Here is the <strong>code chunk</strong> that loads the data for problem 3:</p>
+<pre class="r"><code>library(p8105.datasets)
+data(&quot;brfss_smart2010&quot;)
+brfss_smart2010=
+  janitor::clean_names(brfss_smart2010) %&gt;% 
+  select(-topic) %&gt;% 
+  select(-class) %&gt;% 
+  select(-question) %&gt;% 
+  select(-sample_size) %&gt;%
+  select(-(confidence_limit_low:geo_location))</code></pre>
+<p>Now we are trying to read and clean the data:</p>
 </div>
 
 

@@ -25,7 +25,7 @@ NYCtransit_data_retain =
   mutate(entry=recode(entry,'YES'=TRUE, 'NO'=FALSE)) 
 ```
 
-This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I import the data and then clean the names into all lower cases. Then I select the only variable required, at last I converted the "entry" variable into logical variable "TRUE" and "FALSE". 
+This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I import the data and then clean the names into all lower cases. Then I select the only variable required, at last I converted the "entry" variable into logical variable "TRUE" and "FALSE". The diminsion of the given data is `r dim(NYCtransit_data_retain)`. This is not a tidy dataset yet, because the "route1" to "route11" are apparently data, but they appreared as variables at the first row. Therefore, we need do some reformatting later. 
 
 ```{r}
 num_stations = 
@@ -60,7 +60,7 @@ NYCtransit_data_retain %>%
   dim()
 ```
 
-
+##Problem 2
 
 Here is the **code chunk** to read and clean the data for mr trash wheel 
 ```{r}
@@ -96,6 +96,26 @@ combine_precipitation_data =
 combine_precipitation_data$month = month.name[combine_precipitation_data$month]
 ```
 
+##Problem 3
+
+Here is the **code chunk** that loads the data for problem 3:
+```{r}
+library(p8105.datasets)
+data("brfss_smart2010")
+brfss_smart2010=
+  janitor::clean_names(brfss_smart2010) %>% 
+  select(-topic) %>% 
+  select(-class) %>% 
+  select(-question) %>% 
+  select(-sample_size) %>%
+  select(-(confidence_limit_low:geo_location))
+  
+
+```
+Now we are trying to read and clean the data:
+```{r}
+
+```
 
 
 
