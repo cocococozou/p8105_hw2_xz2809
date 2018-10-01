@@ -129,12 +129,12 @@ $(document).ready(function () {
 
 
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ───────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(readxl)</code></pre>
@@ -157,27 +157,28 @@ $(document).ready(function () {
 ##   `Entrance Longitude` = col_double()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<p>Now we are trying to clean the data: retain line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance.</p>
+<p>Now we are trying to clean the data, including retaining line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance. Also, we converted the entry variable from charater to logical variable. Here is the <strong>code chunk</strong>:</p>
 <pre class="r"><code>NYCtransit_data = janitor::clean_names(NYCtransit_data)
 NYCtransit_data_retain = 
   select(NYCtransit_data,line:vending, ada, ada_notes) %&gt;% 
   mutate(entry=recode(entry,'YES'=TRUE, 'NO'=FALSE)) </code></pre>
-<p>This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I import the data and then clean the names into all lower cases. Then I select the only variable required, at last I converted the “entry” variable into logical variable “TRUE” and “FALSE”. The diminsion of the given data is 1868, 21. This is not a tidy dataset yet, because the “route1” to “route11” are apparently data, but they appreared as variables at the first row. Therefore, we need do some reformatting later.</p>
+<p>This dataset contains line, station name, station latitude and longtitude, routes served, whether there is entry and exist and the type of the entry, and ADA compliance. I imported the data first and then cleaned the names into all lower cases. Then I selected the only variables required, at last I converted the “entry” variable into logical variable “TRUE” and “FALSE”. The diminsion of the given data is 1868, 21. This is not a tidy dataset yet, because the “route1” to “route11” are apparently data, but they appreared as variables at the first row. Therefore, we need do some reformatting later.</p>
+<p>Now here is the <strong>code chunk</strong> to analyze the data:</p>
 <pre class="r"><code>num_stations = 
   distinct(NYCtransit_data_retain, line, station_name) %&gt;% 
   dim()
 
 num_stations_ada = 
   filter(NYCtransit_data_retain, ada=='TRUE') %&gt;% 
-  distinct(line,station_name) %&gt;% 
   dim()
 
 a = filter(NYCtransit_data_retain,entry == 'TRUE')
 length_1 = length(a$entry)
-b = filter(NYCtransit_data_retain,entry == 'TRUE', vending=='YES')
+b = filter(NYCtransit_data_retain,entry == 'TRUE', vending=='NO')
 length_2= length(b$entry)
 proportion=length_2/length_1</code></pre>
-<p>Now we are trying to reformat the dataset</p>
+<p>There are in total 465 distinct stations there and 468 stations are ADA compliant. Approximately, 3.9% of the stations with entrances and exists but without vending allow entrance.</p>
+<p>Now we are trying to reformat the dataset:</p>
 <pre class="r"><code>NYCtransit_data_retain %&gt;% 
   gather(key = route_number, value = route_name, route1:route11) %&gt;% 
   filter(route_name=='A') %&gt;% 
@@ -190,10 +191,11 @@ proportion=length_2/length_1</code></pre>
   distinct(station_name) %&gt;% 
   dim()</code></pre>
 <pre><code>## [1] 16  1</code></pre>
+<p>There are 56 distinct stations serving A train and of the stations that serve the A train, there are 16 that are ADA compliant.</p>
 </div>
 <div id="problem-2" class="section level2">
 <h2>Problem 2</h2>
-<p>Here is the <strong>code chunk</strong> to read and clean the data for mr trash wheel</p>
+<p>This problem is about analyzing the data of Mr.Trash Wheel. Here is the <strong>code chunk</strong> to read and clean the data for mr trash wheel:</p>
 <pre class="r"><code>trashwheel_data &lt;-  
   read_excel( &quot;data/HealthyHarborWaterWheelTotals2017-9-26.xlsx&quot;,range = cell_cols(&quot;A:N&quot;), ) %&gt;% 
   janitor::clean_names() %&gt;% 
@@ -202,7 +204,7 @@ proportion=length_2/length_1</code></pre>
     sports_balls = round(sports_balls),
     sports_balls = as.integer(sports_balls)
   )</code></pre>
-<p>Here is the <strong>code chunk</strong> to read and clean the data for mr trash wheel</p>
+<p>Here is the <strong>code chunk</strong> to read and clean the precipitation data for 2016 and 2017.</p>
 <pre class="r"><code>precipitation_2016_data&lt;-
   read_excel( &quot;data/HealthyHarborWaterWheelTotals2017-9-26.xlsx&quot;,sheet = &quot;2016 Precipitation&quot;, range = &quot;A2:B15&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
@@ -221,6 +223,7 @@ combine_precipitation_data =
   left_join(precipitation_2016_data,precipitation_2017_data,by = &quot;month&quot;) 
 
 combine_precipitation_data$month = month.name[combine_precipitation_data$month]</code></pre>
+<p>For the data of Mr Trash Wheel, there are in total 215 observations. The key variables in this data set is the weight of garbage has been salvaged, in tons and the volume that Mr. Trash Wheel has been to. The median number of sports balls in a dumpster in 2016 is 26. For the data of precipitation of 2016 and 2017, there are in total 12 observations in 2016, however only 8 observations in 2016. The key variable, is the total weight of precipitation in the given month. The total precipitation in 2017 is 29.93.</p>
 </div>
 <div id="problem-3" class="section level2">
 <h2>Problem 3</h2>
