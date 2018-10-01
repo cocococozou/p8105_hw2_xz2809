@@ -105,7 +105,7 @@ For the data of Mr Trash Wheel, there are in total 215 observations. The key var
 
 ##Problem 3
 
-Here is the **code chunk** that loads the data for problem 3:
+This problem analyzes the BRFSS data. Here is the **code chunk** that loads the data for problem 3:
 ```{r}
 library(p8105.datasets)
 data("brfss_smart2010")
