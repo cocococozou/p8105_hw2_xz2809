@@ -147,6 +147,7 @@ brfss_smart2010$excellent=as.numeric(brfss_smart2010$excellent)
 brfss_2002 = filter(brfss_smart2010, year==2002)
 summary(brfss_2002$excellent)
 ggplot(brfss_2002,aes(x=excellent))+geom_histogram()
+##ggplot(brfss_smart2010,aes(x=))
 ```
 
 The most most observed state is NJ. The median of the “Excellent” response value is 23.60. 
