@@ -111,21 +111,19 @@ library(p8105.datasets)
 data("brfss_smart2010")
 brfss_smart2010=
   janitor::clean_names(brfss_smart2010) %>% 
+  filter(topic=="Overall Health") %>% 
   select(-topic) %>% 
   select(-class) %>% 
   select(-question) %>% 
   select(-sample_size) %>%
-  select(-(confidence_limit_low:geo_location))
+  select(-(confidence_limit_low:geo_location)) %>% 
+  spread(key = response, value = data_value) %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    proportion = excellent + very_good
+  )
 ```
 
-Now we create a new variable showing the proportion of responses that were “Excellent” or “Very Good”:
-```{r}
-brfss_smart2010 %>% 
-  filter(response=='Excellent' | response=='Very good') %>% 
-  dim()
-
-dim(brfss_smart2010)
-```
 
 ```{r}
 brfss_smart2010 %>% 
@@ -145,12 +143,10 @@ MaxTable(brfss_smart2010$locationabbr)
 
 
 ```{r}
-brfss_smart2010$data_value=as.numeric(brfss_smart2010$data_value)
-brfss_excellent_2002 = 
-  filter(brfss_smart2010,response=='Excellent') %>% 
-  filter(year==2002)
-summary(brfss_excellent_2002$data_value)
-ggplot(brfss_excellent_2002,aes(x=data_value))+geom_histogram()
+brfss_smart2010$excellent=as.numeric(brfss_smart2010$excellent)
+brfss_2002 = filter(brfss_smart2010, year==2002)
+summary(brfss_2002$excellent)
+ggplot(brfss_2002,aes(x=excellent))+geom_histogram()
 ```
 
 The most most observed state is NJ. The median of the “Excellent” response value is 23.60. 
