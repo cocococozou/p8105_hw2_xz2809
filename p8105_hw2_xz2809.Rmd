@@ -5,14 +5,14 @@ date: "9/29/2018"
 output: html_document
 ---
 
-```{r results='hide', fig.show = 'hide'}
+```{r warning=FALSE,message=FALSE}
 library(tidyverse)
 library(readxl)
 ```
 
 ## Problem 1
 
-Here is the **code chunk** to read the data
+This problem focuses on NYC Transit data. Here is the **code chunk** to read the data
 ```{r message = FALSE,warning = FALSE}
 NYCtransit_data <-  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
 ```
@@ -104,7 +104,8 @@ precipitation_2017_data<-
   )
 
 combine_precipitation_data =
-  rbind(precipitation_2016_data,precipitation_2017_data) 
+  rbind(precipitation_2016_data,precipitation_2017_data) %>% 
+  filter(!is.na(month) & !is.na(total))
 
 combine_precipitation_data$month = month.name[combine_precipitation_data$month]
 ```
@@ -157,7 +158,8 @@ brfss_2002 = filter(brfss_smart2010, year==2002)
 summary(brfss_2002$excellent)
 ```
 
-The most most observed state is NJ. The median of the “Excellent” response value is 23.60. Below two figures are histogram of “Excellent” response values in the year 2002 and scatterplot showing the proportion of “Excellent” response values in New York County and Queens County (both in NY State) in each year from 2002 to 2010, respectively. 
+The most most observed state is NJ. The median of the “Excellent” response value is 23.60. 
+Below two figures are histogram of “Excellent” response values in the year 2002 and scatterplot showing the proportion of “Excellent” response values in New York County and Queens County (both in NY State) in each year from 2002 to 2010, respectively. 
 
 ```{r message = FALSE,warning = FALSE}
 ggplot(brfss_2002,aes(x=excellent))+geom_histogram()+

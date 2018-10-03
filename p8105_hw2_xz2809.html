@@ -128,19 +128,11 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(readxl)</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(readxl)</code></pre>
 <div id="problem-1" class="section level2">
 <h2>Problem 1</h2>
-<p>Here is the <strong>code chunk</strong> to read the data</p>
+<p>This problem focuses on NYC Transit data. Here is the <strong>code chunk</strong> to read the data</p>
 <pre class="r"><code>NYCtransit_data &lt;-  read_csv(file = &quot;./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv&quot;)</code></pre>
 <p>Now we are trying to clean the data, including retaining line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance. Also, we converted the entry variable from charater to logical variable. Here is the <strong>code chunk</strong>:</p>
 <pre class="r"><code>NYCtransit_data = janitor::clean_names(NYCtransit_data)
@@ -213,7 +205,8 @@ precipitation_2017_data&lt;-
   )
 
 combine_precipitation_data =
-  rbind(precipitation_2016_data,precipitation_2017_data) 
+  rbind(precipitation_2016_data,precipitation_2017_data) %&gt;% 
+  filter(!is.na(month) &amp; !is.na(total))
 
 combine_precipitation_data$month = month.name[combine_precipitation_data$month]</code></pre>
 <p>For the data of Mr Trash Wheel, there are in total 215 observations. The key variables in this data set is the weight of garbage has been salvaged, in tons and the volume that Mr. Trash Wheel has been to. The median number of sports balls in a dumpster in 2016 is 26. For the data of precipitation of 2016 and 2017, there are in total 20 observations, 12 with 2016 and 8 with 2017. The key variable, is the total weight of precipitation in the given month. The total precipitation in 2017 is .</p>
