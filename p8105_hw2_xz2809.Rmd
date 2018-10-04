@@ -60,16 +60,16 @@ Now we are trying to reformat the dataset:
 NYCtransit_data_retain %>% 
   gather(key = route_number, value = route_name, route1:route11) %>% 
   filter(route_name=='A') %>% 
-  distinct(station_name) %>% 
+  distinct(station_name,line) %>% 
   nrow()
 
 NYCtransit_data_retain %>% 
   gather(key = route_number, value = route_name, route1:route11) %>% 
   filter(route_name=='A',ada==TRUE) %>% 
-  distinct(station_name) %>% 
+  distinct(station_name,line) %>% 
   nrow()
 ```
-There are 56 distinct stations serving A train and among the stations that serve the A train, there are 16 that are ADA compliant.
+There are 60 distinct stations serving A train and among the stations that serve the A train, there are 17 that are ADA compliant.
 
 ##Problem 2
 
@@ -132,7 +132,7 @@ brfss_smart2010=
   spread(key = response, value = data_value) %>% 
   janitor::clean_names() %>% 
   mutate(
-    proportion = excellent + very_good
+    proportion_ex_verygood = excellent + very_good
   )
 ```
 
@@ -144,7 +144,7 @@ dist_locations = distinct(brfss_smart2010, locationdesc) %>%
 brfss_smart2010 %>% 
   distinct(locationabbr)
 ```
-The proportion of responses that were “Excellent” or “Very Good" is `r 4260/134203`. There are in total `r dist_locations` unique locations included in the dataset. In America, there are 50 states and every state has been represented. The one more variable is "DC", which is not an acutual state but the capital of USA.
+There are in total `r dist_locations` unique locations included in the dataset. In America, there are 50 states and every state has been represented. The one more variable is "DC", which is not an acutual state but the capital of USA.
 
 ```{r}
 MaxTable <- function(x){
@@ -161,13 +161,14 @@ brfss_2002 = filter(brfss_smart2010, year==2002)
 summary(brfss_2002$excellent)
 ```
 
-The most most observed state is NJ. The median of the “Excellent” response value is 23.60. 
+The most most observed state is NJ. The median of the proportion of “Excellent” response value is 23.60, in percentage. 
 Below two figures are histogram of “Excellent” response values in the year 2002 and scatterplot showing the proportion of “Excellent” response values in New York County and Queens County (both in NY State) in each year from 2002 to 2010, respectively. 
 
 ```{r message = FALSE,warning = FALSE}
 ggplot(brfss_2002,aes(x=excellent))+geom_histogram()+
   labs(
-    title="Excellent response value in 2002",
+    title="The proportion of excellent response in 2002",
+    caption = "data from brfss_smart 2002, data in percentage",
     x = "Excellence response proportion",
     y = "Count"
   )+
@@ -180,8 +181,8 @@ brfss_smart2010 %>%
   filter(year>2001 & year<2011) %>% 
   ggplot(aes(x=year,y=excellent,color=locationdesc))+geom_point() + 
   labs(
-    title = "Excellent response values in New York County and Queens County",
-    caption = "data from brfss_smart 2002",
+    title = "The proportion of Excellent response in New York County and Queens County",
+    caption = "data from brfss_smart 2002, data in percentage",
     y = "Excellence proportion"
     )+
   theme_classic()
