@@ -43,15 +43,13 @@ num_stations_ada =
 
 numerator = 
   filter(NYCtransit_data_retain,vending==FALSE & entry==TRUE) %>% 
-  distinct(NYCtransit_data_retain, line, station_name) %>% 
   nrow()
 
 denominator = 
-  filter(NYCtransit_data_retain,entry==TRUE) %>% 
-  distinct(NYCtransit_data_retain, line, station_name) %>% 
+  filter(NYCtransit_data_retain,vending==FALSE) %>% 
   nrow()
 
-proportion = a=numerator/denominator
+proportion =numerator/denominator
 ```
 
 There are in total `r num_stations` distinct stations there and `r num_stations_ada` stations are ADA compliant. Approximately, `r proportion`% of the stations with entrances and exists but without vending allow entrance. 
@@ -78,7 +76,7 @@ There are 56 distinct stations serving A train and among the stations that serve
 This problem is about analyzing the data of Mr.Trash Wheel. Here is the **code chunk** to read and clean the data for mr trash wheel:
 ```{r}
 trashwheel_data <-  
-  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx",range = cell_cols("A:N"), ) %>% 
+  read_excel( "data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",range = cell_cols("A:N"), ) %>% 
   janitor::clean_names() %>% 
   filter(!is.na(dumpster)) %>% 
   mutate(
@@ -90,14 +88,14 @@ trashwheel_data <-
 Here is the **code chunk** to read and clean the precipitation data for 2016 and 2017. 
 ```{r}
 precipitation_2016_data<-
-  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx",sheet = "2016 Precipitation", range = "A2:B15") %>% 
+  read_excel( "data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",sheet = "2016 Precipitation", range = "A2:B15") %>% 
   janitor::clean_names() %>%
   mutate(
     year = 2016
   )
 
 precipitation_2017_data<-
-  read_excel( "data/HealthyHarborWaterWheelTotals2017-9-26.xlsx",sheet = "2017 Precipitation", range = "A2:B15") %>% 
+  read_excel( "data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",sheet = "2017 Precipitation", range = "A2:B15") %>% 
   janitor::clean_names() %>%
   mutate(
     year = 2017
@@ -105,12 +103,17 @@ precipitation_2017_data<-
 
 combine_precipitation_data =
   rbind(precipitation_2016_data,precipitation_2017_data) %>% 
-  filter(!is.na(month) & !is.na(total))
+  filter(!is.na(month) & !is.na(total)) %>% 
+  mutate(weight = total) %>% 
+  select(-total)
 
-combine_precipitation_data$month = month.name[combine_precipitation_data$month]
+combine_precipitation_data$month = 
+  month.name[combine_precipitation_data$month] 
 ```
 
-For the data of Mr Trash Wheel, there are in total 215 observations. The key variables in this data set is the weight of garbage has been salvaged, in tons and the volume that Mr. Trash Wheel has been to. The median number of sports balls in a dumpster in 2016 is `r median(filter(trashwheel_data, year==2016)$sports_balls)`. For the data of precipitation of 2016 and 2017, there are in total 20 observations, 12 with 2016 and 8 with 2017. The key variable, is the total weight of precipitation in the given month. The total precipitation in 2017 is . 
+For the data of Mr Trash Wheel, there are in total 215 observations. The key variables in this data set is the weight of garbage has been salvaged, in tons and the total volume the trash that Mr Trash Wheel has salvaged. The other variables represents the number of plastic bottles had been picked up, the weight of polystyrene has been picked up, and the number of cigarette butts, glass bottles, grocery bags, chip bags and sports balls that had been gathered. The home power represents the n of trash equates to on average 500 kilowatts of electricity. An average household will use 30 kilowatts per day. The median number of sports balls in a dumpster in 2016 is `r median(filter(trashwheel_data, year==2016)$sports_balls)`. 
+
+For the data of precipitation of 2016 and 2017, there are in total 24 observations, 12 with 2016 and 12 with 2017. The key variable, is the total weight of precipitation in the given month. The total precipitation in 2017 is `r sum(filter(combine_precipitation_data, year==2017)$weight)`. 
 
 ##Problem 3
 
